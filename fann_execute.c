@@ -2,18 +2,20 @@
 //----------------------------------------------------------------------------------------------------------------------
 int main(void)
 {
+    printf("Starting...\n");
+
     fann_type * calc_out;
     fann_type input[16];
 
-    struct fann * ann = fann_create_from_file("number.net");
+    struct fann * ann = fann_create_from_file("fannbox.net");
     if (!ann) return 0;
 
     u64 errors = 0;
-    const ui count = 50000;
+    const ui count = 65536;
 
     for (ui i=0;i<count;i++)
     {
-        u16 number = rng_word();
+        u16 number = i;
         const ui real_result = in_range(number);
 
         for (ui j=0;j<16;j++)
@@ -27,11 +29,12 @@ int main(void)
 
         if (real_result != nn_answer)
         {
+            printf("%u was wrong (%.8f) real result: %d\n", i, calc_out[0], real_result ? 1 : -1);
             errors++;
         }
     }
 
-    printf("error rate: %.4f%%\n", (errors * 100.) / count);
+    printf("error rate: %.8f%%\n", (errors * 100.) / count);
 
     fann_destroy(ann);
 
