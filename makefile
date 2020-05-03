@@ -1,4 +1,4 @@
-CC := clang
+CC := @clang
 
 CPPFLAGS += -D "dbgv(x)=printf(\#x\"=%lld\n\",(long long)x);"
 CPPFLAGS += -MP -MMD
@@ -7,18 +7,18 @@ CFLAGS += -std=c18 -Wall -Werror -Wfatal-errors -O3 -fomit-frame-pointer -march=
 
 LDLIBS += -L /usr/local/lib -l:libdoublefann.dll.a
 
-all: xor_train.exe xor_execute.exe
+all: fann_train.exe fann_execute.exe
 
-xor_train.exe : xor_train.o
-	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+fann_train.exe : fann_train.o blake2bmod.o common.o
+	@$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
--include xor_train.d
+-include fann_train.d blake2bmod.d common.d
 
-xor_execute.exe : xor_execute.o
-	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+fann_execute.exe : fann_execute.o blake2bmod.o common.o
+	@$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
--include xor_execute.d
+-include fann_execute.d blake2bmod.d common.d
 
 .PHONY: clean
 clean:
-	@rm -f *.o *.d xor_train.exe xor_execute.exe xor.net
+	@rm -f *.o *.d fann_train.exe fann_execute.exe
