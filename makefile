@@ -9,15 +9,15 @@ LDLIBS += -L /usr/local/lib -l:libdoublefann.dll.a
 
 all: fann_train.exe fann_execute.exe
 
-fann_train.exe : fann_train.o blake2bmod.o common.o
+fann_train.exe : fann_train.o common.o
 	@$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
--include fann_train.d blake2bmod.d common.d
+-include fann_train.d common.d
 
-fann_execute.exe : fann_execute.o blake2bmod.o common.o
+fann_execute.exe : fann_execute.o common.o
 	@$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
--include fann_execute.d blake2bmod.d common.d
+-include fann_execute.d common.d
 
 .PHONY: clean
 clean:

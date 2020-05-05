@@ -14,12 +14,11 @@ typedef uint64_t u64; typedef int64_t s64;
 typedef float r32; typedef double r64;
 typedef __uint128_t u128; typedef __int128_t s128;
 //----------------------------------------------------------------------------------------------------------------------
+#include <byteswap.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "doublefann.h"
-#include "blake2bmod.h"
 //----------------------------------------------------------------------------------------------------------------------
-ui in_range(const u16);
-u16 rng_word(void);
 u32 tick(void);
 //----------------------------------------------------------------------------------------------------------------------
