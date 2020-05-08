@@ -4,31 +4,55 @@ int main(void)
 {
     printf("Starting...\n");
 
-    fann_type * calc_out;
-    fann_type input[10];
+    u64 count;
+    struct digit const * const test_data = load_digits(&count, "train-labels.idx1-ubyte.bin", "train-images.idx3-ubyte.bin");
+
+    fann_type input[784], *calc_out;
 
     struct fann * ann = fann_create_from_file("fannbox.net");
     if (!ann) return 0;
 
-    u64 errors = 0;
-    const ui count = 10000;
-
     for (ui i=0;i<count;i++)
     {
-        for (ui j=0;j<10;j++)
+        for (ui y=0;y<28;y++)
         {
-            input[j] = -1;
+            for (ui x=0;x<28;x++)
+            {
+                input[(y * 28) + x] = test_data[i].pixel[y][x];
+            }
         }
 
         calc_out = fann_run(ann, input);
 
-        if (calc_out[0] > 0)
+        ui activated = 0;
+
+        for (ui j=0;j<10;j++)
         {
-            errors++;
+            if (calc_out[j] > 0)
+            {
+                activated++;
+            }
+        }
+
+        if (activated > 1)
+        {
+            printf("More than 1 neuron activated!\n");
+        }
+
+        if (calc_out[test_data[i].digit] <= 0)
+        {
+            printf("Error: %u failed! Supposed to be %u\n", i, test_data[i].digit);
+
+            for (ui j=0;j<10;j++)
+            {
+                printf("%u: %+.2f\n", j, calc_out[j]);
+            }
+
+            printf("\n");
+
+            print_digit(test_data[i].pixel);
         }
     }
-
-    printf("error rate: %.8f%%\n", (errors * 100.) / count);
 
     fann_destroy(ann);
 

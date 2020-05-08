@@ -20,5 +20,12 @@ typedef __uint128_t u128; typedef __int128_t s128;
 #include <unistd.h>
 #include "doublefann.h"
 //----------------------------------------------------------------------------------------------------------------------
+struct digit
+{
+    r64 pixel[28][28];
+    u8 digit;
+};
+struct digit * load_digits(u64 * const, s8 const * const, s8 const * const);
 u32 tick(void);
+void print_digit(const r64[28][28]);
 //----------------------------------------------------------------------------------------------------------------------
