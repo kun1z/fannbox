@@ -83,8 +83,7 @@ struct digit * load_digits(u64 * const count, s8 const * const filename_labels, 
             {
                 u8 pixel;
                 fread(&pixel, 1, 1, fi);
-                const r64 sigmoid = pixel / 255.;
-                data[i].pixel[y][x] = (sigmoid + sigmoid) - 1; // [-1, +1]
+                data[i].pixel[y][x] = (pixel / 127.5) - 1; // [-1, +1]
             }
         }
 
@@ -102,11 +101,11 @@ struct digit * load_digits(u64 * const count, s8 const * const filename_labels, 
 //----------------------------------------------------------------------------------------------------------------------
 void print_digit(const r64 digit[28][28])
 {
-    for (ui y=0;y<28;y++)
+    for (ui y=2;y<24;y++)
     {
-        for (ui x=0;x<28;x++)
+        for (ui x=2;x<24;x++)
         {
-            putc(digit[y][x] > 0.2 ? '#' : ' ', stdout);
+            putc(digit[y][x] > 0 ? '#' : '-', stdout);
         }
 
         putc('\n', stdout);

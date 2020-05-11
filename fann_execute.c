@@ -7,54 +7,60 @@ int main(void)
     u64 count;
     struct digit const * const test_data = load_digits(&count, "train-labels.idx1-ubyte.bin", "train-images.idx3-ubyte.bin");
 
-    fann_type input[784], *calc_out;
-
     struct fann * ann = fann_create_from_file("fannbox.net");
     if (!ann) return 0;
 
+    u64 error_count = 0;
+
     for (ui i=0;i<count;i++)
     {
-        for (ui y=0;y<28;y++)
+        fann_type input[576];
+
+        for (ui y=0;y<24;y++)
         {
-            for (ui x=0;x<28;x++)
+            for (ui x=0;x<24;x++)
             {
-                input[(y * 28) + x] = test_data[i].pixel[y][x];
+                input[(y * 24) + x] = test_data[i].pixel[y+2][x+2];
             }
         }
 
-        calc_out = fann_run(ann, input);
+        fann_type * const calc_out = fann_run(ann, input);
 
-        ui activated = 0;
+        r64 max = -2;
+        ui nn_digit;
 
         for (ui j=0;j<10;j++)
         {
-            if (calc_out[j] > 0)
+            if (calc_out[j] > max)
             {
-                activated++;
+                max = calc_out[j];
+                nn_digit = j;
             }
         }
 
-        if (activated > 1)
+        if (test_data[i].digit != nn_digit)
         {
-            printf("More than 1 neuron activated!\n");
-        }
-
-        if (calc_out[test_data[i].digit] <= 0)
-        {
-            printf("Error: %u failed! Supposed to be %u\n", i, test_data[i].digit);
+            /*printf("Error: %u failed! Supposed to be %u, was %u\n", i, test_data[i].digit, nn_digit);
 
             for (ui j=0;j<10;j++)
             {
-                printf("%u: %+.2f\n", j, calc_out[j]);
+                printf("%u: %+.3f\n", j, calc_out[j]);
             }
-
             printf("\n");
 
             print_digit(test_data[i].pixel);
+
+            sleep(10);*/
+
+            error_count++;
         }
     }
 
     fann_destroy(ann);
+
+    printf("count: %lu\n", count);
+    printf("error_count: %lu\n", error_count);
+    printf("Final Error: %.4f%%\n", (error_count * 100.) / count);
 
     printf("All done!\n");
     fflush(0);
