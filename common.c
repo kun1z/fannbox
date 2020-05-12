@@ -7,7 +7,7 @@ u32 tick(void)
     return (now.tv_sec * 1000UL) + (now.tv_nsec / 1000000UL);
 }
 //----------------------------------------------------------------------------------------------------------------------
-struct digit * load_digits(u64 * const count, s8 const * const filename_labels, s8 const * const filename_images)
+struct digit * load_digits(ui * const count, s8 const * const filename_labels, s8 const * const filename_images)
 {
     *count = 0;
 
@@ -75,7 +75,7 @@ struct digit * load_digits(u64 * const count, s8 const * const filename_labels, 
 
     const u32 start = tick();
 
-    for (u64 i=0;i<count1;i++)
+    for (ui i=0;i<count1;i++)
     {
         for (ui y=0;y<28;y++)
         {
@@ -87,25 +87,30 @@ struct digit * load_digits(u64 * const count, s8 const * const filename_labels, 
             }
         }
 
-        fread(&data[i].digit, 1, 1, fl);
+        u8 digit;
+        fread(&digit, 1, 1, fl);
+        data[i].digit = digit;
     }
 
     const u32 end = tick();
 
     printf("Completed in %ums\n", end - start);
 
+    fclose(fl);
+    fclose(fi);
+
     *count = count1;
 
     return data;
 }
 //----------------------------------------------------------------------------------------------------------------------
-void print_digit(const r64 digit[28][28])
+void print_digit(const r32 digit[28][28])
 {
-    for (ui y=2;y<24;y++)
+    for (ui y=0;y<24;y++)
     {
-        for (ui x=2;x<24;x++)
+        for (ui x=0;x<24;x++)
         {
-            putc(digit[y][x] > 0 ? '#' : '-', stdout);
+            putc(digit[y+2][x+2] > 0 ? '#' : '-', stdout);
         }
 
         putc('\n', stdout);

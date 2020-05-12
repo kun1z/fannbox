@@ -4,13 +4,13 @@ int main(void)
 {
     printf("Starting...\n");
 
-    u64 count;
-    struct digit const * const test_data = load_digits(&count, "train-labels.idx1-ubyte.bin", "train-images.idx3-ubyte.bin");
-
     struct fann * ann = fann_create_from_file("fannbox.net");
     if (!ann) return 0;
 
-    u64 error_count = 0;
+    ui count;
+    struct digit const * const test_data = load_digits(&count, "train-labels.idx1-ubyte.bin", "train-images.idx3-ubyte.bin");
+
+    ui error_count = 0;
 
     for (ui i=0;i<count;i++)
     {
@@ -26,7 +26,7 @@ int main(void)
 
         fann_type * const calc_out = fann_run(ann, input);
 
-        r64 max = -2;
+        r32 max = -1;
         ui nn_digit;
 
         for (ui j=0;j<10;j++)
@@ -44,7 +44,7 @@ int main(void)
 
             for (ui j=0;j<10;j++)
             {
-                printf("%u: %+.3f\n", j, calc_out[j]);
+                printf("%u: %+.4f\n", j, calc_out[j]);
             }
             printf("\n");
 
@@ -58,8 +58,8 @@ int main(void)
 
     fann_destroy(ann);
 
-    printf("count: %lu\n", count);
-    printf("error_count: %lu\n", error_count);
+    printf("count: %u\n", count);
+    printf("error_count: %u\n", error_count);
     printf("Final Error: %.4f%%\n", (error_count * 100.) / count);
 
     printf("All done!\n");
