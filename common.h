@@ -23,10 +23,10 @@ typedef __uint128_t u128; typedef __int128_t s128;
 //----------------------------------------------------------------------------------------------------------------------
 struct digit
 {
-    r32 pixel[28][28];
+    r64 pixel[28][28];
     ui digit;
 };
 struct digit * load_digits(ui * const, s8 const * const, s8 const * const);
-u32 tick(void);
-void print_digit(const r32[28][28]);
+u64 tick(void);
+void print_digit(const r64[28][28]);
 //----------------------------------------------------------------------------------------------------------------------

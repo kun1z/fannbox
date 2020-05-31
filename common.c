@@ -1,10 +1,10 @@
 #include "common.h"
 //----------------------------------------------------------------------------------------------------------------------
-u32 tick(void)
+u64 tick(void)
 {
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
-    return (now.tv_sec * 1000UL) + (now.tv_nsec / 1000000UL);
+    return (now.tv_sec * 1000ULL) + (now.tv_nsec / 1000000ULL);
 }
 //----------------------------------------------------------------------------------------------------------------------
 struct digit * load_digits(ui * const count, s8 const * const filename_labels, s8 const * const filename_images)
@@ -73,7 +73,7 @@ struct digit * load_digits(ui * const count, s8 const * const filename_labels, s
 
     printf("Loading %u samples from %s and %s...\n", count1, filename_labels, filename_images);
 
-    const u32 start = tick();
+    const u64 start = tick();
 
     for (ui i=0;i<count1;i++)
     {
@@ -92,9 +92,9 @@ struct digit * load_digits(ui * const count, s8 const * const filename_labels, s
         data[i].digit = digit;
     }
 
-    const u32 end = tick();
+    const u64 end = tick();
 
-    printf("Completed in %ums\n", end - start);
+    printf("Completed in %lums\n", end - start);
 
     fclose(fl);
     fclose(fi);
@@ -104,7 +104,7 @@ struct digit * load_digits(ui * const count, s8 const * const filename_labels, s
     return data;
 }
 //----------------------------------------------------------------------------------------------------------------------
-void print_digit(const r32 digit[28][28])
+void print_digit(const r64 digit[28][28])
 {
     for (ui y=0;y<24;y++)
     {

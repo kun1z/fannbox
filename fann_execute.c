@@ -26,7 +26,7 @@ int main(void)
 
         fann_type * const calc_out = fann_run(ann, input);
 
-        r32 max = -1;
+        r64 max = -1;
         ui nn_digit;
 
         for (ui j=0;j<10;j++)
